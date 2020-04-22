@@ -1,3 +1,4 @@
 #git ignore file to exclude weights and some other files
 *.h5
 /.idea
+.gitignore
