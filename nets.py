@@ -72,7 +72,7 @@ def segnet(input_shape, conv_kernel_size, padding, dropout, filters, last_activa
     :param dropout:
     :param filters:
     :param last_activation:
-    :return:
+    :return: model with SegNet architecture, which is similar to UNet
     '''
     model = 'model to be added here'
     return model
