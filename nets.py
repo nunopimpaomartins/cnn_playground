@@ -61,14 +61,13 @@ def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     return model
 
 
-def segnet(input_shape, conv_kernel_size, padding, dropout, filters, last_activation):
+def segnet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     '''
     Function retunns a model with the SegNet implementation in keras.
     paper reference:
     [1] V. Badrinarayanan et al IEEE Trans. Pattern Anal. Mach. Intell. 2017
-    :param input_shape:
-    :param conv_kernel_size:
-    :param padding:
+    :param input_shape: image shape to be fed to the network
+    :param conv_kernel_size: kernel size for the convolutional layers of the network
     :param dropout:
     :param filters:
     :param last_activation:
@@ -116,7 +115,8 @@ def segnet(input_shape, conv_kernel_size, padding, dropout, filters, last_activa
     conv4_3 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same')(conv4_2)
     conv4_3 = layers.BatchNormalization()(conv4_3)
     conv4_3 = layers.Activation('relu')(conv4_3)
-    pool4, ind4 = MaxPoolingWithArgmax2D((2,2))(conv4_3)
+    drop1 = layers.Dropout(dropout)(conv4_3)
+    pool4, ind4 = MaxPoolingWithArgmax2D((2,2))(drop1)
 
     conv5_1 = layers.Conv2D(filters * 16, conv_kernel_size, padding='same')(pool4)
     conv5_1 = layers.BatchNormalization()(conv5_1)
@@ -127,7 +127,8 @@ def segnet(input_shape, conv_kernel_size, padding, dropout, filters, last_activa
     conv5_3 = layers.Conv2D(filters * 16, conv_kernel_size, padding='same')(conv5_2)
     conv5_3 = layers.BatchNormalization()(conv5_3)
     conv5_3 = layers.Activation('relu')(conv5_3)
-    pool5, ind5 = MaxPoolingWithArgmax2D((2,2))(conv5_3)
+    drop2 = layers.Dropout(dropout)(conv5_3)
+    pool5, ind5 = MaxPoolingWithArgmax2D((2,2))(drop2)
 
     #decoder
     up1 = MaxUnpooling2D((2,2))([ind5, pool5])
@@ -152,5 +153,33 @@ def segnet(input_shape, conv_kernel_size, padding, dropout, filters, last_activa
     conv7_3 = layers.BatchNormalization()(conv7_3)
     conv7_3 = layers.Activation('relu')(conv7_3)
 
-    model = 'model to be added here'
+    up3 = MaxUnpooling2D((2,2))([ind3, conv7_3])
+    conv8_1 = layers.Conv2D(filters * 4, conv_kernel_size, padding='same')(up3)
+    conv8_1 = layers.BatchNormalization()(conv8_1)
+    conv8_1 = layers.Activation('relu')(conv8_1)
+    conv8_2 = layers.Conv2D(filters * 4, conv_kernel_size, padding='same')(conv8_1)
+    conv8_2 = layers.BatchNormalization()(conv8_2)
+    conv8_2 = layers.Activation('relu')(conv8_2)
+    conv8_3 = layers.Conv2D(filters * 4, conv_kernel_size, padding='same')(conv8_2)
+    conv8_3 = layers.BatchNormalization()(conv8_3)
+    conv8_3 = layers.Activation('relu')(conv8_3)
+
+    up4 = MaxUnpooling2D((2,2))([ind2, conv8_3])
+    conv9_1 = layers.Conv2D(filters * 2, conv_kernel_size, padding='same')(up4)
+    conv9_1 = layers.BatchNormalization()(conv9_1)
+    conv9_1 = layers.Activation('relu')(conv9_1)
+    conv9_2 = layers.Conv2D(filters * 2, conv_kernel_size, padding='same')(conv9_1)
+    conv9_2 = layers.BatchNormalization()(conv9_2)
+    conv9_2 = layers.Activation('relu')(conv9_2)
+
+    up5 = MaxUnpooling2D((2,2))([ind1, conv9_2])
+    conv10_1 = layers.Conv2D(filters, conv_kernel_size, padding='same')(up5)
+    conv10_1 = layers.BatchNormalization()(conv10_1)
+    conv10_1 = layers.Activation('relu')(conv10_1)
+    conv10_2 = layers.Conv2D(filters, conv_kernel_size, padding='same')(conv10_1)
+    conv10_2 = layers.BatchNormalization()(conv10_2)
+    conv10_2 = layers.Activation('relu')(conv10_2)
+    output_tensor = layers.Activation(last_activation)(conv10_2)
+
+    model = Model(inputs=input_tensor, outputs=output_tensor)
     return model
