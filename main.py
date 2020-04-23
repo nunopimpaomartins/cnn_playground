@@ -1,4 +1,3 @@
-from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 
 import numpy as np
@@ -80,8 +79,6 @@ pl5_x = fig.add_subplot(2, 5, 5)
 pl5_x.imshow(X[n+4][...,0])
 pl5_y = fig.add_subplot(2, 5, 10)
 pl5_y.imshow(Y[n+4][...,0])
-
-
 
 
 model = unet(input_shape=(128, 128, 1), conv_kernel_size=3, dropout=0.5, filters=64, last_activation='sigmoid')
