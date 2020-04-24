@@ -2,8 +2,9 @@ from keras import backend as K
 from keras.layers import Layer
 import tensorflow as tf
 
+
 class MaxPoolingWithArgmax2D(Layer):
-    def __init__(self, pool_size=(2, 2), strides=(2, 2), padding="same", **kwargs):
+    def __init__(self, pool_size=(2, 2), strides=(2, 2), padding="valid", **kwargs):
         super(MaxPoolingWithArgmax2D, self).__init__(**kwargs)
         self.padding = padding
         self.pool_size = pool_size
