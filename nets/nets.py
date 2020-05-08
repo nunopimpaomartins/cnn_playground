@@ -1,6 +1,6 @@
 from keras import Input, layers
 from keras.models import Model
-from layers import MaxUnpooling2D, MaxPoolingWithArgmax2D
+from .layers import MaxUnpooling2D, MaxPoolingWithArgmax2D
 
 def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     '''
@@ -61,7 +61,7 @@ def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     return model
 
 
-def segnet(input_shape, conv_kernel_size, dropout, filters, last_activation):
+def segnet(input_shape, conv_kernel_size, dropout, filters, n_classes, last_activation):
     '''
     Function retunns a model with the SegNet implementation in keras.
     paper reference:
@@ -70,6 +70,7 @@ def segnet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     :param conv_kernel_size: kernel size for the convolutional layers of the network
     :param dropout:
     :param filters:
+    :param n_classes: number of labels to segment
     :param last_activation:
     :return: model with SegNet architecture, which is similar to UNet
     '''
@@ -179,7 +180,7 @@ def segnet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     conv10_2 = layers.Conv2D(filters, conv_kernel_size, padding='same')(conv10_1)
     conv10_2 = layers.BatchNormalization()(conv10_2)
     conv10_2 = layers.Activation('relu')(conv10_2)
-    conv10_3 = layers.Conv2D(1, (1,1), padding='valid')(conv10_2)
+    conv10_3 = layers.Conv2D(n_classes, (1,1), padding='valid')(conv10_2)
     output_tensor = layers.Activation(last_activation)(conv10_3)
 
     model = Model(inputs=input_tensor, outputs=output_tensor)
