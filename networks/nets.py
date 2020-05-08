@@ -180,7 +180,7 @@ def segnet(input_shape, conv_kernel_size, dropout, filters, n_classes, last_acti
     conv10_2 = layers.Conv2D(filters, conv_kernel_size, padding='same')(conv10_1)
     conv10_2 = layers.BatchNormalization()(conv10_2)
     conv10_2 = layers.Activation('relu')(conv10_2)
-    conv10_3 = layers.Conv2D(n_classes, (1,1), padding='valid')(conv10_2)
+    conv10_3 = layers.Conv2D(1, (1,1), padding='valid')(conv10_2)
     output_tensor = layers.Activation(last_activation)(conv10_3)
 
     model = Model(inputs=input_tensor, outputs=output_tensor)
