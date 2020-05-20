@@ -92,10 +92,7 @@ def segnet(input_shape, conv_kernel_size, dropout, filters, n_classes, last_acti
     conv2_2 = layers.Conv2D(filters * 2, conv_kernel_size, padding='same')(conv2_1)
     conv2_2 = layers.BatchNormalization()(conv2_2)
     conv2_2 = layers.Activation('relu')(conv2_2)
-    conv2_3 = layers.Conv2D(filters * 2, conv_kernel_size, padding='same')(conv2_2)
-    conv2_3 = layers.BatchNormalization()(conv2_3)
-    conv2_3 = layers.Activation('relu')(conv2_3)
-    pool2, ind2 = MaxPoolingWithArgmax2D((2, 2))(conv2_3)
+    pool2, ind2 = MaxPoolingWithArgmax2D((2, 2))(conv2_2)
 
     conv3_1 = layers.Conv2D(filters * 4, conv_kernel_size, padding='same')(pool2)
     conv3_1 = layers.BatchNormalization()(conv3_1)
