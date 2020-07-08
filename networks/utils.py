@@ -50,7 +50,7 @@ def metric_ssim(gt, img, dynamic_range):
     mean_img = img.mean()
     variance_gt = np.square(np.std(gt))
     variance_img = np.square(np.std(img))
-    covariance_xy = np.cov(gt.flatten(), img.flatten())
+    covariance_xy = np.cov(gt.flatten(), img.flatten())[0,1]
     k1 = 0.01
     k2 = 0.03
     # l = (np.power(2, dynamic_range - 1))
@@ -71,7 +71,12 @@ def metric_coc(gt, img):
     :param img: predicted image
     :return:
     """
+    assert gt.shape == img.shape, 'Ground truth and predicted images have different shapes.'
     mean_gt = gt.mean()
     mean_img = img.mean()
-    sum_numerator = 0
-    # for i in range()
+    num = np.sum((np.subtract(gt, mean_gt)).flatten() * (np.subtract(img, mean_img)).flatten())
+    denom = np.sqrt(
+        np.sum((np.square(np.subtract(gt, mean_gt))).flatten()) * np.sum((np.square(np.subtract(img, mean_img))).flatten())
+    )
+    coc = num/denom
+    return coc
