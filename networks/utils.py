@@ -1,5 +1,6 @@
 import numpy as np
-
+from tensorflow.image import ssim as tf_ssim
+from tensorflow import reduce_mean
 
 def psnr(gt, img, img_max):
     """
@@ -53,8 +54,9 @@ def metric_ssim(gt, img, dynamic_range):
     covariance_xy = np.cov(gt.flatten(), img.flatten())[0,1]
     k1 = 0.01
     k2 = 0.03
-    # l = (np.power(2, dynamic_range - 1))
-    l = (2 ^ dynamic_range - 1)
+    # l = (np.power(2, dynamic_range ) - 1)
+    l = (2 ** dynamic_range) - 1
+    # l = dynamic_range
     c1 = np.square(k1 * l)
     c2 = np.square(k2 * l)
 
@@ -62,6 +64,17 @@ def metric_ssim(gt, img, dynamic_range):
     denominator = (np.square(mean_gt) + np.square(mean_img) + c1) * (variance_gt + variance_img + c2)
     ssim = numerator / denominator
     return ssim
+
+
+def loss_ssim(gt, img, dynamic_range=1):
+    """
+    :param gt:
+    :param img:
+    :param dynamic_range:
+    :return: loss (1-SSIM) computed by Tensorflow, tf.image.ssim(im1, im2, dynamic_range)
+    """
+    calc_ssim = tf_ssim(gt, img, dynamic_range)
+    return 1-reduce_mean(calc_ssim)
 
 
 def metric_coc(gt, img):
