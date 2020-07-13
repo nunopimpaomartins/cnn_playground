@@ -243,9 +243,9 @@ def segnet_nonorm(input_shape, conv_kernel_size, nfilters, dropout, final_classe
     block9_activ = layers.Activation('relu')(block9_conv)
     block10_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(block9_activ)
     block10_activ = layers.Activation('relu')(block10_conv)
-    # drop1 = layers.Dropout(dropout)(block10_activ)
+    drop1 = layers.Dropout(dropout)(block10_activ)
 
-    maxpool4, ind4 = MaxPoolingWithArgmax2D((2, 2))(block10_activ)
+    maxpool4, ind4 = MaxPoolingWithArgmax2D((2, 2))(drop1)
 
     block11_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(maxpool4)
     block11_activ = layers.Activation('relu')(block11_conv)
@@ -253,9 +253,9 @@ def segnet_nonorm(input_shape, conv_kernel_size, nfilters, dropout, final_classe
     block12_activ = layers.Activation('relu')(block12_conv)
     block13_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(block12_activ)
     block13_activ = layers.Activation('relu')(block13_conv)
-    # drop2 = layers.Dropout(dropout)(block13_activ)
+    drop2 = layers.Dropout(dropout)(block13_activ)
 
-    maxpool5, ind5 = MaxPoolingWithArgmax2D((2, 2))(block13_activ)
+    maxpool5, ind5 = MaxPoolingWithArgmax2D((2, 2))(drop2)
 
     unpool5 = MaxUnpooling2D((2, 2))([maxpool5, ind5])
 
