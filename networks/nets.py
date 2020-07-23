@@ -5,13 +5,13 @@ from .layers import MaxUnpooling2D, MaxPoolingWithArgmax2D
 
 def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     """
-    This is the implementation of  a 2D UNet with keras. For practice purposes
+    This is the implementation of  a 2D UNet with Keras. For practice purposes
 
     :param input_shape:  shape of the input image.
     :param conv_kernel_size: shape of the convolutiuon kernel to be used. Default should be 3
     :param dropout: dropout rate used in the last conv layer and before upsampling
     :param filters: initial number of filters in the net
-    :param last_activation: last activation layer of the networkl. Current default is 'sigmoid'
+    :param last_activation: last activation layer of the network.
     :return: returns a network as a model
     """
     input_tensor = Input(shape=input_shape)
@@ -35,7 +35,6 @@ def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
 
     up6 = layers.UpSampling2D((2, 2))(drop5)
     up6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(up6)
-    # crop4 = layers.
     merged6 = layers.concatenate([conv4, up6], axis=3)
     conv6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(merged6)
     conv6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(conv6)
@@ -214,44 +213,44 @@ def segnet_nonorm(input_shape, conv_kernel_size, nfilters, dropout, final_classe
 
     input_layer = Input(shape=input_shape)
 
-    block1_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same')(input_layer)
+    block1_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same', kernel_regularizer='l2')(input_layer)
     block1_activ = layers.Activation('relu')(block1_conv)
-    block2_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same')(block1_activ)
+    block2_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same', kernel_regularizer='l2')(block1_activ)
     block2_activ = layers.Activation('relu')(block2_conv)
 
     maxpool1, ind1 = MaxPoolingWithArgmax2D((2, 2))(block2_activ)
 
-    block3_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same')(maxpool1)
+    block3_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same', kernel_regularizer='l2')(maxpool1)
     block3_activ = layers.Activation('relu')(block3_conv)
-    block4_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same')(block3_activ)
+    block4_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same', kernel_regularizer='l2')(block3_activ)
     block4_activ = layers.Activation('relu')(block4_conv)
 
     maxpool2, ind2 = MaxPoolingWithArgmax2D((2, 2))(block4_activ)
 
-    block5_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same')(maxpool2)
+    block5_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same', kernel_regularizer='l2')(maxpool2)
     block5_activ = layers.Activation('relu')(block5_conv)
-    block6_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same')(block5_activ)
+    block6_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same', kernel_regularizer='l2')(block5_activ)
     block6_activ = layers.Activation('relu')(block6_conv)
-    block7_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same')(block6_activ)
+    block7_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same', kernel_regularizer='l2')(block6_activ)
     block7_activ = layers.Activation('relu')(block7_conv)
 
     maxpool3, ind3 = MaxPoolingWithArgmax2D((2, 2))(block7_activ)
 
-    block8_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(maxpool3)
+    block8_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same', kernel_regularizer='l2')(maxpool3)
     block8_activ = layers.Activation('relu')(block8_conv)
-    block9_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(block8_activ)
+    block9_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same', kernel_regularizer='l2')(block8_activ)
     block9_activ = layers.Activation('relu')(block9_conv)
-    block10_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(block9_activ)
+    block10_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same', kernel_regularizer='l2')(block9_activ)
     block10_activ = layers.Activation('relu')(block10_conv)
     drop1 = layers.Dropout(dropout)(block10_activ)
 
     maxpool4, ind4 = MaxPoolingWithArgmax2D((2, 2))(drop1)
 
-    block11_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(maxpool4)
+    block11_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same', kernel_regularizer='l2')(maxpool4)
     block11_activ = layers.Activation('relu')(block11_conv)
-    block12_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(block11_activ)
+    block12_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same', kernel_regularizer='l2')(block11_activ)
     block12_activ = layers.Activation('relu')(block12_conv)
-    block13_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(block12_activ)
+    block13_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same', kernel_regularizer='l2')(block12_activ)
     block13_activ = layers.Activation('relu')(block13_conv)
     drop2 = layers.Dropout(dropout)(block13_activ)
 
@@ -259,43 +258,43 @@ def segnet_nonorm(input_shape, conv_kernel_size, nfilters, dropout, final_classe
 
     unpool5 = MaxUnpooling2D((2, 2))([maxpool5, ind5])
 
-    block14_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(unpool5)
+    block14_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same', kernel_regularizer='l2')(unpool5)
     block14_activ = layers.Activation('relu')(block14_conv)
-    block15_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same')(block14_activ)
+    block15_conv = layers.Conv2D(nfilters * 16, conv_kernel_size, padding='same', kernel_regularizer='l2')(block14_activ)
     block15_activ = layers.Activation('relu')(block15_conv)
-    block16_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(block15_activ)
+    block16_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same', kernel_regularizer='l2')(block15_activ)
     block16_activ = layers.Activation('relu')(block16_conv)
 
     unpool4 = MaxUnpooling2D((2, 2))([block16_activ, ind4])
 
-    block17_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(unpool4)
+    block17_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same', kernel_regularizer='l2')(unpool4)
     block17_activ = layers.Activation('relu')(block17_conv)
-    block18_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same')(block17_activ)
+    block18_conv = layers.Conv2D(nfilters * 8, conv_kernel_size, padding='same', kernel_regularizer='l2')(block17_activ)
     block18_activ = layers.Activation('relu')(block18_conv)
-    block19_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same')(block18_activ)
+    block19_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same', kernel_regularizer='l2')(block18_activ)
     block19_activ = layers.Activation('relu')(block19_conv)
 
     unpool3 = MaxUnpooling2D((2, 2))([block19_activ, ind3])
 
-    block20_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same')(unpool3)
+    block20_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same', kernel_regularizer='l2')(unpool3)
     block20_activ = layers.Activation('relu')(block20_conv)
-    block21_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same')(block20_activ)
+    block21_conv = layers.Conv2D(nfilters * 4, conv_kernel_size, padding='same', kernel_regularizer='l2')(block20_activ)
     block21_activ = layers.Activation('relu')(block21_conv)
-    block22_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same')(block21_activ)
+    block22_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same', kernel_regularizer='l2')(block21_activ)
     block22_activ = layers.Activation('relu')(block22_conv)
 
     unpool2 = MaxUnpooling2D((2, 2))([block22_activ, ind2])
 
-    block23_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same')(unpool2)
+    block23_conv = layers.Conv2D(nfilters * 2, conv_kernel_size, padding='same', kernel_regularizer='l2')(unpool2)
     block23_activ = layers.Activation('relu')(block23_conv)
-    block24_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same')(block23_activ)
+    block24_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same', kernel_regularizer='l2')(block23_activ)
     block24_activ = layers.Activation('relu')(block24_conv)
 
     unpool1 = MaxUnpooling2D((2, 2))([block24_activ, ind1])
 
-    block25_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same')(unpool1)
+    block25_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same', kernel_regularizer='l2')(unpool1)
     block25_activ = layers.Activation('relu')(block25_conv)
-    block26_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same')(block25_activ)
+    block26_conv = layers.Conv2D(nfilters, conv_kernel_size, padding='same', kernel_regularizer='l2')(block25_activ)
     block26_activ = layers.Activation('relu')(block26_conv)
 
     lastblock_conv = layers.Conv2D(final_classes, (1, 1), padding='valid')(block26_activ)
