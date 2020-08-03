@@ -46,17 +46,15 @@ def metric_ssim(gt, img, dynamic_range):
     :param dynamic_range:
     :return:
     """
-    assert gt.shape == img.shape, 'Ground truth and predicted images have different shapes.'
-    mean_gt = gt.mean()
-    mean_img = img.mean()
+    # assert gt.shape == img.shape, 'Ground truth and predicted images have different shapes.'
+    mean_gt = np.mean(gt)
+    mean_img = np.mean(img)
     variance_gt = np.square(np.std(gt))
     variance_img = np.square(np.std(img))
     covariance_xy = np.cov(gt.flatten(), img.flatten())[0,1]
     k1 = 0.01
     k2 = 0.03
-    # l = (np.power(2, dynamic_range ) - 1)
     l = (2 ** dynamic_range) - 1
-    # l = dynamic_range
     c1 = np.square(k1 * l)
     c2 = np.square(k2 * l)
 
@@ -66,8 +64,21 @@ def metric_ssim(gt, img, dynamic_range):
     return ssim
 
 
+def loss_myssim(gt, img, dynamic_range=1):
+    """
+
+    :param gt:
+    :param img:
+    :param dynamic_range:
+    :return:
+    """
+    loss = (1 - metric_ssim(gt, img, dynamic_range))
+    return loss.mean(axis=None)
+
+
 def loss_ssim(gt, img, dynamic_range=1):
     """
+    computed loss using Tensorflow's SSIM implementation, tf.image.ssim(im1, im2, dynamic_range)
     :param gt:
     :param img:
     :param dynamic_range:
