@@ -104,3 +104,26 @@ def metric_coc(gt, img):
     )
     coc = num/denom
     return coc
+
+def normalize_img(x):
+    """
+    Min Max normalization between [0, 1]
+    :param x:
+    :return:
+    """
+    ma = np.max(x)
+    mi = np.min(x)
+    eps = 1e-20
+    x_norm = (x - mi) / (ma - mi + eps)
+    return x_norm
+
+def normalize_mean(x):
+    """
+    Normalization by standardization (x - mean) / std
+    :param x:
+    :return:
+    """
+    mean = np.mean(x)
+    std = np.std(x)
+    x_std_normalized = (x - mean) / std
+    return x_std_normalized
