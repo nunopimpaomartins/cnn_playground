@@ -35,22 +35,22 @@ def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
 
     up6 = layers.UpSampling2D((2, 2))(drop5)
     up6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(up6)
-    merged6 = layers.concatenate([conv4, up6], axis=3)
+    merged6 = layers.Concatenate(axis=-1)([conv4, up6])
     conv6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(merged6)
     conv6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(conv6)
 
     up7 = layers.Conv2D(filters * 4, 2, padding='same', activation='relu')(layers.UpSampling2D((2, 2))(conv6))
-    merged7 = layers.concatenate([conv3, up7], axis=3)
+    merged7 = layers.Concatenate(axis=-1)([conv3, up7])
     conv7 = layers.Conv2D(filters * 4, conv_kernel_size, padding='same', activation='relu')(merged7)
     conv7 = layers.Conv2D(filters * 4, conv_kernel_size, padding='same', activation='relu')(conv7)
 
     up8 = layers.Conv2D(filters * 2, 2, padding='same', activation='relu')(layers.UpSampling2D((2, 2))(conv7))
-    merged8 = layers.concatenate([conv2, up8], axis=3)
+    merged8 = layers.Concatenate(axis=-1)([conv2, up8])
     conv8 = layers.Conv2D(filters * 2, conv_kernel_size, padding='same', activation='relu')(merged8)
     conv8 = layers.Conv2D(filters * 2, conv_kernel_size, padding='same', activation='relu')(conv8)
 
     up9 = layers.Conv2D(filters, 2, padding='same', activation='relu')(layers.UpSampling2D((2, 2))(conv8))
-    merged9 = layers.concatenate([conv1, up9], axis=3)
+    merged9 = layers.Concatenate(axis=-1)([conv1, up9])
     conv9 = layers.Conv2D(filters, conv_kernel_size, padding='same', activation='relu')(merged9)
     conv9 = layers.Conv2D(filters, conv_kernel_size, padding='same', activation='relu')(conv9)
     conv9 = layers.Conv2D(2, conv_kernel_size, padding='same', activation='relu')(conv9)
