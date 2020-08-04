@@ -28,19 +28,19 @@ def unet_3d(input_shape, conv_kernel_size, filters, last_activation):
     block4_conv2 = layers.Conv3D(filters * 8, conv_kernel_size, padding='same', activation='relu')(block4_conv1)
 
     up3 = layers.UpSampling3D((2, 2, 2))(block4_conv2)
-    up3 = layers.Conv3D(filters * 4, 2, padding='same', activation='relu')(up3)
+    up3 = layers.Conv3D(filters * 4, (2, 2, 2), padding='same', activation='relu')(up3)
     merge3 = layers.Concatenate(axis=-1)([block3_conv2, up3])
     block5_conv1 = layers.Conv3D(filters * 4, conv_kernel_size, padding='same', activation='relu')(merge3)
     block5_conv2 = layers.Conv3D(filters * 4, conv_kernel_size, padding='same', activation='relu')(block5_conv1)
 
     up2 = layers.UpSampling3D((2, 2, 2))(block5_conv2)
-    up2 = layers.Conv3D(filters * 2, 2, padding='same', activation='relu')(up2)
+    up2 = layers.Conv3D(filters * 2, (2, 2, 2), padding='same', activation='relu')(up2)
     merge2 = layers.Concatenate(axis=-1)([block2_conv2, up2])
     block6_conv1 = layers.Conv3D(filters * 2, conv_kernel_size, padding='same', activation='relu')(merge2)
     block6_conv2 = layers.Conv3D(filters * 2, conv_kernel_size, padding='same', activation='relu')(block6_conv1)
 
     up1 = layers.UpSampling3D((2, 2, 2))(block4_conv2)
-    up1 = layers.Conv3D(filters, 2, padding='same', activation='relu')(up1)
+    up1 = layers.Conv3D(filters, (2, 2, 2), padding='same', activation='relu')(up1)
     merge1 = layers.Concatenate(axis=-1)([block1_conv2, up1])
     block7_conv1 = layers.Conv3D(filters, conv_kernel_size, padding='same', activation='relu')(merge1)
     block7_conv2 = layers.Conv3D(filters, conv_kernel_size, padding='same', activation='relu')(block7_conv1)
