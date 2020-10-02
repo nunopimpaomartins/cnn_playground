@@ -34,7 +34,7 @@ def unet(input_shape, conv_kernel_size, dropout, filters, last_activation):
     drop5 = layers.Dropout(dropout)(conv5)
 
     up6 = layers.UpSampling2D((2, 2))(drop5)
-    up6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(up6)
+    up6 = layers.Conv2D(filters * 8, 2, padding='same', activation='relu')(up6)
     merged6 = layers.Concatenate(axis=-1)([conv4, up6])
     conv6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(merged6)
     conv6 = layers.Conv2D(filters * 8, conv_kernel_size, padding='same', activation='relu')(conv6)
